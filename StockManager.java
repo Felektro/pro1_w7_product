@@ -26,7 +26,20 @@ public class StockManager
      */
     public void addProduct(Product item)
     {
-        stockList.add(item);
+        if(findProduct(item.getID()) == null){
+            stockList.add(item);
+        }else{
+            System.out.println("An item with this ID already exists!");
+        }
+        
+    }
+    
+    public void checkUnderStocked(int minStock){
+        for(Product product : stockList){
+            if(product.getQuantity() < minStock){
+                System.out.println(product.toString() + " needs restocking, were under " + minStock);
+            }
+        }
     }
     
     /**
@@ -37,6 +50,10 @@ public class StockManager
      */
     public void delivery(int id, int amount)
     {
+        Product product = findProduct(id);
+        if(product != null){
+            product.increaseQuantity(amount);
+        }
     }
     
     /**
@@ -46,8 +63,25 @@ public class StockManager
      */
     public Product findProduct(int id)
     {
+        for(Product product : stockList){
+            if(product.getID() == id){
+                return product;
+            }
+        }
+        
         return null;
     }
+    
+    public Product findProduct(String name){
+        for(Product product : stockList){
+            if(product.getName().equals(name)){
+                return product;
+            }
+        }
+        
+        return null;
+    }
+
     
     /**
      * Locate a product with the given ID, and return how
@@ -58,6 +92,10 @@ public class StockManager
      */
     public int numberInStock(int id)
     {
+        Product product = findProduct(id);
+        if(product != null){
+            return product.getQuantity();
+        }
         return 0;
     }
 
